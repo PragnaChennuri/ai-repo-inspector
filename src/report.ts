@@ -13,7 +13,15 @@ export function markdownReport(input: ReportInput): string {
   }
   lines.push("", "## Validation output");
   for (const result of input.validationResults) {
-    lines.push(`### ${result.command}`, "```", result.output, "```");
+    const statusLabel = result.status === "passed" ? "✅ passed" : "❌ failed";
+    lines.push(
+      `### ${result.command}`,
+      `**Status:** ${statusLabel}`,
+      "",
+      "```",
+      result.output,
+      "```",
+    );
   }
   return lines.join("\n");
 }

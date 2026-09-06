@@ -4,6 +4,12 @@ import type { ReviewRequest } from "./types.js";
 import { runValidations } from "./validation.js";
 
 export async function reviewRepository(request: ReviewRequest): Promise<string> {
+  if (!request.repositoryPath || !request.repositoryPath.trim()) {
+    // Validated once here, shared by both the CLI and MCP adapters, so the two
+    // interfaces fail the same way on the same bad input instead of drifting.
+    throw new Error("repositoryPath is required.");
+  }
+
   const files = changedFiles(request.repositoryPath, request.baseRef);
   const validations = await runValidations(
     request.validationCommands ?? [],
